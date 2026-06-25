@@ -40,10 +40,45 @@ import Socials from "./Socials.astro";
 </header>
 
 <script>
+  // Mobile menu toggle
   const menuBtn = document.getElementById("menu-btn")!;
   const mobileNav = document.getElementById("mobile-nav")!;
-  menuBtn.addEventListener("click", () => {
-    mobileNav.classList.toggle("max-h-0");
-    mobileNav.classList.toggle("max-h-80");
-  });
+  if (menuBtn && mobileNav) {
+    menuBtn.addEventListener("click", () => {
+      mobileNav.classList.toggle("max-h-0");
+      mobileNav.classList.toggle("max-h-80");
+    });
+  }
+
+  // Theme toggle
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    // Sync icon state on load
+    const root = document.documentElement;
+    const isDark = root.getAttribute("data-theme") === "dark";
+    const sunIcon = document.getElementById("sun-icon");
+    const moonIcon = document.getElementById("moon-icon");
+    if (sunIcon && moonIcon) {
+      sunIcon.classList.toggle("hidden", !isDark);
+      moonIcon.classList.toggle("hidden", isDark);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const html = document.documentElement;
+      const currentlyDark = html.getAttribute("data-theme") === "dark";
+      const newTheme = currentlyDark ? "light" : "dark";
+
+      html.setAttribute("data-theme", newTheme);
+      html.classList.toggle("dark", newTheme === "dark");
+      localStorage.setItem("theme", newTheme);
+
+      // Update icons
+      const sun = document.getElementById("sun-icon");
+      const moon = document.getElementById("moon-icon");
+      if (sun && moon) {
+        sun.classList.toggle("hidden", newTheme !== "dark");
+        moon.classList.toggle("hidden", newTheme === "dark");
+      }
+    });
+  }
 </script>

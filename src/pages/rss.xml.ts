@@ -16,7 +16,7 @@ export async function GET(context: { site: URL }) {
       <guid isPermaLink="true">${new URL(`/posts/${slugifyStr(post.data.title)}`, siteUrl).href}</guid>
       <description>${escapeXml(post.data.description)}</description>
       <pubDate>${post.data.pubDatetime.toUTCString()}</pubDate>
-    </item>`
+    </item>`,
 		)
 		.join("\n");
 
