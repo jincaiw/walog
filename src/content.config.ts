@@ -4,31 +4,31 @@ import { glob } from "astro/loaders";
 import config from "@/config";
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/posts" }),
-  schema: ({ image }: { image: () => any }) =>
-    z.object({
-      author: z.string().default(config.site.author),
-      pubDatetime: z.coerce.date(),
-      modDatetime: z.coerce.date().optional().nullable(),
-      title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      timezone: z.string().optional(),
-    }),
+	loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/posts" }),
+	schema: ({ image }: { image: () => any }) =>
+		z.object({
+			author: z.string().default(config.site.author),
+			pubDatetime: z.coerce.date(),
+			modDatetime: z.coerce.date().optional().nullable(),
+			title: z.string(),
+			featured: z.boolean().optional(),
+			draft: z.boolean().optional(),
+			tags: z.array(z.string()).default(["others"]),
+			ogImage: image().or(z.string()).optional(),
+			description: z.string(),
+			canonicalURL: z.string().optional(),
+			timezone: z.string().optional(),
+		}),
 });
 
 const pages = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/pages" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    ogImage: z.string().optional(),
-    canonicalURL: z.string().optional(),
-  }),
+	loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/pages" }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		ogImage: z.string().optional(),
+		canonicalURL: z.string().optional(),
+	}),
 });
 
 export const collections = { posts, pages };

@@ -4,10 +4,10 @@ import slugifyLib from "slugify";
 const hasNonLatin = (str: string): boolean => /[^\x00-\x7F]/.test(str);
 
 export const slugifyStr = (str: string): string => {
-  if (hasNonLatin(str)) {
-    return kebabcase(str);
-  }
-  return slugifyLib(str, { lower: true });
+	if (hasNonLatin(str)) {
+		return kebabcase(str);
+	}
+	return slugifyLib(str, { lower: true });
 };
 
 export const slugifyAll = (arr: string[]) => arr.map((str) => slugifyStr(str));

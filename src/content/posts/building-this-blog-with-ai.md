@@ -1,7 +1,7 @@
 ---
 title: "基于 Astro 在 GitHub Pages 上构建个人博客"
 description: "记录用 pi coding agent 从空目录开始搭建这个博客的完整过程——技术选型、实际踩坑以及最终效果。"
-pubDatetime: 2026-06-25
+pubDatetime: "2026-06-25"
 tags: ["博客", "Astro", "AI"]
 featured: true
 ---
