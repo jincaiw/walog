@@ -1,206 +1,229 @@
-# Walog — 王记
+# jason.wa的博客
 
-个人技术博客，基于 Astro 构建，静态部署于 GitHub Pages。
+记录日常生活、想法、脑洞、思考等。
+
+基于 Astro 构建，静态部署于 GitHub Pages。
 
 ## 技术栈
 
-- [Astro 6](https://astro.build) — 静态站点生成器
-- [Tailwind CSS 4](https://tailwindcss.com) — 实用优先的 CSS 框架
+- [Astro 7](https://astro.build) — 静态站点生成器
+- [Tailwind CSS 4](https://tailwindcss.com) + [Typography](https://tailwindcss.com/docs/typography-plugin)
 - [Pagefind](https://pagefind.app) — 静态全文搜索
-- [GitHub Pages](https://pages.github.com) — 托管与部署
-- [GitHub Actions](https://github.com/features/actions) — CI/CD
+- [GitHub Pages](https://pages.github.com) + [GitHub Actions](https://github.com/features/actions)
 
 ## 要求
 
 - Node.js >= 22.12.0
-- pnpm（项目使用 pnpm 管理依赖）
-
-## 本地启动
-
-```bash
-# 安装依赖
-pnpm install
-
-# 启动开发服务器
-pnpm dev
-
-# 类型检查
-pnpm check
-
-# 生产构建（包含 Pagefind 索引）
-pnpm build
-
-# 预览生产构建
-pnpm preview
-```
-
-## 创建文章
-
-在 `src/content/blog/` 下创建 `.md` 文件：
-
-```markdown
----
-title: "文章标题"
-description: "文章摘要"
-publishDate: "2026-06-25"
-tags: ["标签1", "标签2"]
-featured: true
----
-
-文章正文，支持标准 Markdown。
-```
-
-### Frontmatter 字段
-
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `title` | string | 是 | 文章标题 |
-| `description` | string | 是 | 文章摘要 |
-| `publishDate` | date | 是 | 发布日期（ISO 格式） |
-| `updatedDate` | date | 否 | 更新日期 |
-| `tags` | string[] | 否 | 标签，默认 `[]` |
-| `category` | string | 否 | 文章分类 |
-| `draft` | boolean | 否 | 是否为草稿，默认 `false` |
-| `featured` | boolean | 否 | 是否精选，默认 `false` |
-| `cover` | string | 否 | 封面图片路径（本地文件） |
-| `author` | string | 否 | 作者，默认使用站点配置 |
-| `canonicalUrl` | string | 否 | 原始出处 URL |
-| `slug` | string | 否 | 自定义永久链接（默认使用文件名） |
-
-### 图片存放
-
-图片文件可放在 `src/content/blog/` 或 `public/` 目录中。推荐放在文章同目录下：
-
-```
-src/content/blog/my-post/
-  index.md
-  cover.png
-  screenshot.png
-```
-
-### 草稿和未来文章
-
-- `draft: true` 的文章在开发环境可见，生产构建不会发布
-- `publishDate` 晚于构建时间的文章不会发布
-- RSS、Sitemap、搜索和文章列表均使用同一套过滤逻辑
-
-## 搜索
-
-生产构建后使用 Pagefind 建立全文索引。搜索功能只在 `search` 页面加载：
-
-```
-pnpm build
-```
-
-构建后 `dist/pagefind/` 目录即包含搜索索引。
-
-## RSS
-
-RSS 地址：`https://mujizi.com/rss.xml`
-
-自动包含所有已发布文章，按时间倒序排列。
-
-## GitHub Pages 部署
-
-### 用户主页仓库（username.github.io）
-
-- 无需额外配置
-- `site: https://username.github.io`
-
-### 项目仓库
-
-- GitHub 仓库启用 Pages
-- `site: https://username.github.io`
-- `base: /repository-name`
-
-### 使用自定义域名
-
-本项目使用 `public/CNAME` 声明自定义域名，已在仓库设置中配置。
-
-**DNS 记录需自行配置：**
-
-| 类型 | 名称 | 目标 |
-|------|------|------|
-| A | `@` | `185.199.108.153` `185.199.109.153` `185.199.110.153` `185.199.111.153` |
-| AAAA | `@` | `2606:50c0:8000::153` `2606:50c0:8001::153` `2606:50c0:8002::153` `2606:50c0:8003::153` |
-| CNAME | `www` | `jincaiw.github.io` |
-
-配置后 GitHub 会自动为 `mujizi.com` 签发 SSL 证书，`www.mujizi.com` 将自动重定向到 `mujizi.com`。
-
-## 项目目录
-
-```
-walog/
-├── .github/workflows/deploy.yml  # CI/CD 配置
-├── public/
-│   ├── CNAME                      # 自定义域名
-│   ├── favicon.svg                # 站点图标
-│   └── robots.txt                 # 爬虫配置
-├── src/
-│   ├── components/                # Astro 组件
-│   │   ├── Header.astro
-│   │   ├── Footer.astro
-│   │   ├── ThemeToggle.astro
-│   │   ├── ArticleCard.astro
-│   │   ├── Pagination.astro
-│   │   └── TagList.astro
-│   ├── content/
-│   │   └── blog/                  # Markdown 文章
-│   ├── layouts/
-│   │   └── BaseLayout.astro       # 基础布局
-│   ├── pages/
-│   │   ├── index.astro            # 首页
-│   │   ├── about.astro            # 关于
-│   │   ├── archive.astro          # 归档
-│   │   ├── search.astro           # 搜索
-│   │   ├── 404.astro              # 404 页面
-│   │   ├── blog/                  # 文章列表和详情
-│   │   ├── tags/                  # 标签页
-│   │   ├── rss.xml.ts             # RSS 生成
-│   │   └── robots.txt.ts          # robots.txt 生成
-│   ├── styles/
-│   │   └── global.css             # 全局样式
-│   ├── utils/
-│   │   └── index.ts               # 工具函数
-│   ├── config.ts                  # 站点配置
-│   └── content.config.ts          # 内容模型
-```
-
-## 可选功能
-
-### Giscus 评论
-
-编辑 `src/config.ts`，填写 Giscus 配置：
-
-```ts
-giscus: {
-  repo: "owner/repo",
-  repoId: "R_xxx",
-  category: "Announcements",
-  categoryId: "DIC_xxx",
-}
-```
-
-未配置时不会渲染评论区域。repoId、categoryId 可通过 [Giscus 官网](https://giscus.app) 查询。
-
-## 常见问题
-
-**Q: 为什么 pnpm 安装失败？**
-
-A: 确保使用 Node.js 22.12.0+ 并安装了 pnpm：
+- pnpm
 
 ```bash
 npm install -g pnpm
 ```
 
-**Q: 如何添加新标签？**
+## 快速开始
 
-A: 在文章的 Frontmatter 中设置 `tags` 字段，标签会自动聚合。
+```bash
+pnpm install
+pnpm dev        # http://localhost:4321
+```
 
-**Q: 搜索在开发环境不可用？**
+## 📝 发布标准流程
 
-A: Pagefind 只在生产构建后建立索引，开发环境使用 `pnpm dev` 时搜索会显示友好提示。
+### 1. 创建文章
 
-## 许可
+复制模板：
 
-MIT
+```bash
+cp src/content/posts/_template.md src/content/posts/my-post.md
+```
+
+### 2. Frontmatter 字段
+
+```yaml
+---
+title: "文章标题"
+description: "文章摘要，会显示在列表页和搜索结果中"
+pubDatetime: "2026-06-25"
+modDatetime: "2026-06-25"       # 可选，更新日期
+tags: ["标签1", "标签2"]         # 留空默认 ["others"]
+draft: false                     # true=草稿，不发布
+featured: false                  # true=精选，显示在首页最上方
+---
+```
+
+> ⚠️ `pubDatetime` 和 `modDatetime` 必须用双引号包裹，格式 `"YYYY-MM-DD"`
+
+### 3. 本地预览
+
+```bash
+pnpm dev
+```
+
+访问 `http://localhost:4321` 查看文章效果。
+
+### 4. 类型检查 + 生产构建
+
+```bash
+pnpm build
+```
+
+此命令按顺序执行：
+
+1. `astro check` — TypeScript 类型检查
+2. `astro build` — 静态页面生成（输出到 `dist/`）
+3. `pagefind --site dist` — 建立全文搜索索引
+
+### 5. 提交发布
+
+```bash
+git add -A
+git commit -m "feat: add post - 文章标题"
+git push
+```
+
+推送后 GitHub Actions 自动构建并部署到 `https://mujizi.com`
+
+### 完整流程（一行命令）
+
+```bash
+pnpm build && git add -A && git commit -m "feat: add post - 文章标题" && git push
+```
+
+## 📂 项目目录
+
+```
+walog/
+├── astro-paper.config.ts          # 站点配置（标题、描述、社交链接等）
+├── astro.config.ts                # Astro 构建配置
+├── .github/workflows/deploy.yml   # CI/CD 自动部署
+├── public/
+│   ├── CNAME                      # 自定义域名
+│   └── favicon.svg
+└── src/
+    ├── content/
+    │   ├── posts/                 # 📄 文章存放处（.md）
+    │   │   └── _template.md       # 文章模板
+    │   └── content.config.ts      # 内容模型定义
+    ├── components/                # UI 组件
+    ├── layouts/                   # 页面布局
+    ├── pages/                     # 路由页面
+    │   ├── index.astro            # 首页
+    │   ├── posts/                 # 文章列表 + 详情
+    │   ├── tags/                  # 标签页
+    │   ├── archives/              # 归档
+    │   ├── search.astro           # 搜索
+    │   ├── about.astro            # 关于
+    │   └── 404.astro              # 404
+    ├── styles/global.css          # 全局样式 + 设计变量
+    ├── utils/                     # 工具函数（slugify、排序、过滤等）
+    ├── i18n/                      # 中文国际化
+    ├── config.ts                  # 运行时配置
+    ├── types/config.ts            # 配置类型定义
+    └── scripts/theme.ts           # 深色模式脚本
+```
+
+## 📖 写作指南
+
+### 图片
+
+图片放在 `public/` 目录或文章同目录下：
+
+```
+src/content/posts/
+├── my-post/
+│   ├── index.md
+│   └── cover.png
+```
+
+在 Markdown 中引用：
+
+```markdown
+![图片描述](/my-post/cover.png)
+```
+
+### 代码块
+
+````markdown
+```javascript
+console.log("支持语法高亮");
+```
+````
+
+### 中文阅读优化
+
+- 正文字号 17px，行高 1.85
+- 字体栈优先加载 Noto Sans SC（系统字体）
+- 段落间距 1.5em
+- 阅读时间按中英文混合计算（中文 400 字/分钟，英文 200 词/分钟）
+
+### 草稿和未来文章
+
+- `draft: true` — 本地开发可见，生产构建跳过
+- 发布时间晚于构建时间 15 分钟内的文章会发布，超过则跳过
+
+### 标签规范
+
+- 标签区分大小写，建议统一全小写英文或中文
+- 多个标签用数组 `["标签1", "标签2"]`
+- 自动去重，自动排序（按文章数量降序）
+
+## 🔍 搜索
+
+使用 Pagefind 实现静态全文搜索，构建时自动建立索引：
+
+- 只索引带有 `data-pagefind-body` 属性的文章正文
+- 导航、页脚、标签列表等公共区域不进入索引
+- 开发环境不可用，构建后本地预览：`pnpm preview`
+- 搜索页面在 `https://mujizi.com/search`
+
+## 🌐 部署
+
+推送到 `master` 分支自动触发 GitHub Actions 部署：
+
+```yaml
+push → actions/checkout → withastro/action → actions/deploy-pages
+```
+
+部署地址：
+
+- 自定义域名：`https://mujizi.com`
+- GitHub Pages：`https://jincaiw.github.io/walog/`
+
+## 📡 RSS
+
+- 地址：`https://mujizi.com/rss.xml`
+- 自动包含所有已发布文章，按时间倒序
+- 含 `<language>zh-CN</language>` 标识
+
+## ⚙️ 配置
+
+站点配置统一在 `astro-paper.config.ts` 中修改：
+
+| 字段 | 说明 | 示例值 |
+|------|------|--------|
+| `site.title` | 博客标题 | `jason.wa的博客` |
+| `site.description` | 博客描述 | `记录日常生活、想法、脑洞、思考等` |
+| `site.author` | 作者名 | `jason.wa` |
+| `site.lang` | 语言 | `zh-CN` |
+| `site.url` | 部署 URL | `https://mujizi.com` |
+| `posts.perPage` | 每页文章数 | `10` |
+| `posts.perIndex` | 首页显示数 | `5` |
+| `socials` | 社交链接 | GitHub、RSS |
+
+## 🎨 深色模式
+
+- 跟随系统偏好（`prefers-color-scheme`）
+- 可手动切换（点击 Header 中的日月图标）
+- 选择持久化到 `localStorage`
+- 内联脚本防止 Flash of Unstyled Content
+- 尊重 `prefers-reduced-motion`
+
+## 常见问题
+
+**搜索在 dev 模式不可用？**
+
+Pagefind 只在生产构建后建立索引。使用 `pnpm preview` 预览包含搜索的完整站点。
+
+**如何修改标签 slug？**
+
+标签 slug 由 `lodash.kebabcase` 生成，中文标签保留原字符。
