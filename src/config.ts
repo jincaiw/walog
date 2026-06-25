@@ -1,8 +1,8 @@
 export const siteConfig = {
-	title: "Wang's Blog",
-	shortTitle: "Walog",
-	description: "王记 — 个人技术博客，记录编程、技术与思考",
-	author: "Wang",
+	title: "jason.wa的博客",
+	shortTitle: "jason.wa",
+	description: "记录日常生活、想法、脑洞、思考等",
+	author: "jason.wa",
 	lang: "zh-CN" as const,
 	url: "https://mujizi.com",
 	github: "https://github.com/jincaiw",
@@ -11,7 +11,7 @@ export const siteConfig = {
 	ogImage: "/og-default.png",
 	footer: {
 		since: 2024,
-		name: "Wang",
+		name: "jason.wa",
 	},
 	nav: [
 		{ text: "首页", href: "/" },
