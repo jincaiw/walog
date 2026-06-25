@@ -1,0 +1,32 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { siteConfig } from "@/config";
+---
+
+<BaseLayout title="关于">
+  <Fragment slot="header"><Header /></Fragment>
+
+  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-12 pb-16">
+    <h1 class="text-2xl font-bold mb-6">关于</h1>
+    <div class="prose">
+      <p>
+        这是 <strong>{siteConfig.shortTitle}</strong> —— {siteConfig.author} 的个人技术博客。
+      </p>
+      <p>
+        这里主要记录编程实践、技术思考和学习笔记。内容以中文为主，涵盖后端开发、系统设计、DevOps 等相关主题。
+      </p>
+      <p>
+        博客使用 <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> 构建，静态部署于 GitHub Pages。
+      </p>
+      <h2>联系方式</h2>
+      <ul>
+        <li>GitHub：<a href={siteConfig.github} target="_blank" rel="noopener noreferrer">{siteConfig.github}</a></li>
+        <li>博客 RSS：<a href={new URL("/rss.xml", Astro.site).href}>订阅更新</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <Fragment slot="footer"><Footer /></Fragment>
+</BaseLayout>

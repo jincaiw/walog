@@ -1,0 +1,70 @@
+---
+import { siteConfig } from "@/config";
+import "@/styles/global.css";
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+}
+
+const { title, description, ogImage, canonicalUrl, noIndex } = Astro.props;
+const pageTitle = `${title} — ${siteConfig.shortTitle}`;
+const pageDesc = description ?? siteConfig.description;
+const pageOgImage = ogImage
+  ? new URL(ogImage, Astro.site).href
+  : new URL(siteConfig.ogImage, Astro.site).href;
+const canonical = canonicalUrl ?? Astro.url.href;
+---
+
+<!doctype html>
+<html lang={siteConfig.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:image" content={pageOgImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.title} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={pageOgImage} />
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={new URL("/rss.xml", Astro.site).href} />
+
+    {noIndex && <meta name="robots" content="noindex" />}
+
+    <!-- Theme script (avoid flash) -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (theme === "dark" || (!theme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">跳到主要内容</a>
+    <slot name="header" />
+    <main id="main-content">
+      <slot />
+    </main>
+    <slot name="footer" />
+    <slot name="scripts" />
+  </body>
+</html>

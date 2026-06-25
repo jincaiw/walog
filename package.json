@@ -1,0 +1,30 @@
+{
+  "name": "walog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "王记 — 个人技术博客",
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build:astro": "astro build",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "astro": "^6.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@tailwindcss/vite": "^4.0.0",
+    "pagefind": "^1.3.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^6.0.3"
+  }
+}

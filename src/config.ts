@@ -1,0 +1,30 @@
+export const siteConfig = {
+	title: "Wang's Blog",
+	shortTitle: "Walog",
+	description: "王记 — 个人技术博客，记录编程、技术与思考",
+	author: "Wang",
+	lang: "zh-CN" as const,
+	url: "https://mujizi.com",
+	github: "https://github.com/jincaiw",
+	repo: "https://github.com/jincaiw/walog",
+	postsPerPage: 10,
+	ogImage: "/og-default.png",
+	footer: {
+		since: 2024,
+		name: "Wang",
+	},
+	nav: [
+		{ text: "首页", href: "/" },
+		{ text: "文章", href: "/blog" },
+		{ text: "标签", href: "/tags" },
+		{ text: "归档", href: "/archive" },
+		{ text: "搜索", href: "/search" },
+		{ text: "关于", href: "/about" },
+	] as { text: string; href: string }[],
+	giscus: {
+		repo: "",
+		repoId: "",
+		category: "",
+		categoryId: "",
+	},
+} as const;

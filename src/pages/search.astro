@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+---
+
+<BaseLayout title="搜索">
+  <Fragment slot="header"><Header /></Fragment>
+
+  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-12 pb-16">
+    <h1 class="text-2xl font-bold mb-6">搜索</h1>
+    <div id="search"></div>
+    <p id="search-fallback" class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-dark-secondary)] hidden">
+      搜索功能在本地开发环境中不可用，请构建后预览。
+    </p>
+  </div>
+
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <script>
+    (async () => {
+      const searchContainer = document.getElementById("search");
+      const fallback = document.getElementById("search-fallback");
+
+      try {
+        const pagefind = await import(
+          /* @vite-ignore */
+          new URL("/pagefind/pagefind.js", document.baseURI).href
+        );
+        await pagefind.init();
+
+        const ui = document.createElement("div");
+        searchContainer!.appendChild(ui);
+
+        const { PagefindUI } = await import(
+          /* @vite-ignore */
+          new URL("/pagefind/pagefind-ui.js", document.baseURI).href
+        );
+        new PagefindUI({
+          element: ui,
+          showSubResults: true,
+          showImages: false,
+          resetStyles: false,
+        });
+      } catch (e) {
+        console.warn("Pagefind not available in dev mode:", e);
+        fallback!.classList.remove("hidden");
+      }
+    })();
+  </script>
+</BaseLayout>

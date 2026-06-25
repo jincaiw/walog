@@ -1,0 +1,41 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ArticleCard from "@/components/ArticleCard.astro";
+import { getCollection } from "astro:content";
+import { getPublishedPosts, sortPostsByDate, getAllTags } from "@/utils";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tags = getAllTags(posts);
+  return tags.map(({ tag }) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+const allPosts = await getCollection("blog");
+const tagPosts = sortPostsByDate(
+  getPublishedPosts(allPosts).filter((p) =>
+    p.data.tags.map((t: string) => t.trim()).includes(tag)
+  )
+);
+---
+
+<BaseLayout title={`标签: ${tag}`}>
+  <Fragment slot="header"><Header /></Fragment>
+
+  <div class="mx-auto max-w-[1120px] px-4 sm:px-6 pt-12 pb-16">
+    <h1 class="text-2xl font-bold mb-2">标签: {tag}</h1>
+    <p class="text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-dark-secondary)] mb-8">
+      共 {tagPosts.length} 篇文章
+    </p>
+    <div class="space-y-7">
+      {tagPosts.map((post) => <ArticleCard post={post} />)}
+    </div>
+  </div>
+
+  <Fragment slot="footer"><Footer /></Fragment>
+</BaseLayout>
