@@ -115,11 +115,17 @@ RSS 地址：`https://mujizi.com/rss.xml`
 
 ### 使用自定义域名
 
-1. 在域名提供商处添加 CNAME 记录指向 `username.github.io`
-2. 在 GitHub 仓库 Settings → Pages 中设置自定义域名
-3. `public/CNAME` 文件包含域名
+本项目使用 `public/CNAME` 声明自定义域名，已在仓库设置中配置。
 
-本项目使用 `public/CNAME` 声明自定义域名，已配置 DNS。
+**DNS 记录需自行配置：**
+
+| 类型 | 名称 | 目标 |
+|------|------|------|
+| A | `@` | `185.199.108.153` `185.199.109.153` `185.199.110.153` `185.199.111.153` |
+| AAAA | `@` | `2606:50c0:8000::153` `2606:50c0:8001::153` `2606:50c0:8002::153` `2606:50c0:8003::153` |
+| CNAME | `www` | `jincaiw.github.io` |
+
+配置后 GitHub 会自动为 `mujizi.com` 签发 SSL 证书，`www.mujizi.com` 将自动重定向到 `mujizi.com`。
 
 ## 项目目录
 
