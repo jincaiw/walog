@@ -1,0 +1,27 @@
+---
+const paths = Astro.url.pathname.split("/").filter(Boolean);
+---
+
+<nav class="mx-auto max-w-[1120px] px-4 sm:px-6 pt-4" aria-label="Breadcrumb">
+  <ol class="flex items-center gap-2 text-sm text-muted-foreground">
+    <li>
+      <a href="/" class="hover:text-accent transition-colors">首页</a>
+    </li>
+    {paths.map((p, i) => {
+      const href = "/" + paths.slice(0, i + 1).join("/");
+      const label = p === "posts" ? "文章" : p === "tags" ? "标签" : p === "archives" ? "归档" : p === "search" ? "搜索" : p === "about" ? "关于" : decodeURIComponent(p);
+      return (
+        <>
+          <li>/</li>
+          <li>
+            {i === paths.length - 1 ? (
+              <span class="text-foreground">{label}</span>
+            ) : (
+              <a href={href} class="hover:text-accent transition-colors">{label}</a>
+            )}
+          </li>
+        </>
+      );
+    })}
+  </ol>
+</nav>

@@ -1,16 +1,14 @@
 ---
-import { siteConfig } from "@/config";
+import config from "@/config";
+import Socials from "./Socials.astro";
 ---
 
-<footer class="border-t border-[var(--color-border)] dark:border-[var(--color-border-dark)] mt-16">
-  <div class="mx-auto max-w-[1120px] px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-dark-secondary)]">
+<footer class="border-t border-border mt-16">
+  <div class="mx-auto max-w-[1120px] px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
     <div>
-      &copy; {siteConfig.footer.since}—{new Date().getFullYear()} {siteConfig.footer.name}.
-      <span>用 <a href="https://astro.build" class="hover:text-[var(--color-accent)] transition-colors" target="_blank" rel="noopener noreferrer">Astro</a> 构建。</span>
+      <span>&copy; {new Date().getFullYear()} {config.site.author}.</span>
+      <span> 用 Astro 构建。</span>
     </div>
-    <div class="flex items-center gap-4">
-      <a href={new URL("/rss.xml", Astro.site).href} class="hover:text-[var(--color-accent)] transition-colors" title="RSS">RSS</a>
-      <a href={siteConfig.github} class="hover:text-[var(--color-accent)] transition-colors" target="_blank" rel="noopener noreferrer" title="GitHub">GitHub</a>
-    </div>
+    <Socials />
   </div>
 </footer>

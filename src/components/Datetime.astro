@@ -1,0 +1,14 @@
+---
+import { formatDatetime } from "@/i18n/format";
+
+export interface Props {
+  datetime: Date;
+  size?: "sm" | "lg";
+}
+
+const { datetime } = Astro.props;
+---
+
+<time datetime={datetime.toISOString()} class="text-muted-foreground text-sm">
+  {formatDatetime(datetime)}
+</time>

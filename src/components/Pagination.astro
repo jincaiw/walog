@@ -10,11 +10,11 @@ const { currentPage, totalPages, baseUrl } = Astro.props;
 
 {
   totalPages > 1 && (
-    <nav class="flex items-center justify-center gap-2 mt-10" aria-label="分页">
+    <nav class="flex items-center justify-center gap-2 mt-10" aria-label="Pagination">
       {currentPage > 1 && (
         <a
           href={currentPage === 2 ? baseUrl : `${baseUrl}/${currentPage - 1}`}
-          class="px-3 py-1.5 text-sm border border-[var(--color-border)] dark:border-[var(--color-border-dark)] rounded hover:border-[var(--color-accent)] dark:hover:border-[var(--color-accent-light)] transition-colors"
+          class="px-3 py-1.5 text-sm border border-border rounded hover:border-accent transition-colors"
         >
           上一页
         </a>
@@ -24,8 +24,8 @@ const { currentPage, totalPages, baseUrl } = Astro.props;
           href={page === 1 ? baseUrl : `${baseUrl}/${page}`}
           class={`px-3 py-1.5 text-sm rounded transition-colors ${
             page === currentPage
-              ? "bg-[var(--color-accent)] text-white"
-              : "border border-[var(--color-border)] dark:border-[var(--color-border-dark)] hover:border-[var(--color-accent)] dark:hover:border-[var(--color-accent-light)]"
+              ? "bg-accent text-accent-foreground"
+              : "border border-border hover:border-accent"
           }`}
         >
           {page}
@@ -34,7 +34,7 @@ const { currentPage, totalPages, baseUrl } = Astro.props;
       {currentPage < totalPages && (
         <a
           href={`${baseUrl}/${currentPage + 1}`}
-          class="px-3 py-1.5 text-sm border border-[var(--color-border)] dark:border-[var(--color-border-dark)] rounded hover:border-[var(--color-accent)] dark:hover:border-[var(--color-accent-light)] transition-colors"
+          class="px-3 py-1.5 text-sm border border-border rounded hover:border-accent transition-colors"
         >
           下一页
         </a>

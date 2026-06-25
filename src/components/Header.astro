@@ -1,45 +1,40 @@
 ---
-import { siteConfig } from "@/config";
-import ThemeToggle from "@/components/ThemeToggle.astro";
+import config from "@/config";
+import Socials from "./Socials.astro";
 ---
 
-<header class="sticky top-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)] dark:bg-[var(--color-bg-dark)]/95 dark:border-[var(--color-border-dark)]">
+<header class="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
   <div class="mx-auto max-w-[1120px] px-4 sm:px-6 flex items-center justify-between h-14">
-    <a href="/" class="text-lg font-semibold tracking-tight hover:text-[var(--color-accent)] transition-colors">
-      {siteConfig.shortTitle}
+    <a href="/" class="text-lg font-semibold tracking-tight hover:text-accent transition-colors">
+      {config.site.title}
     </a>
-    <div class="flex items-center gap-1">
+    <div class="flex items-center gap-2">
       <nav class="hidden md:flex items-center gap-1">
-        {
-          siteConfig.nav.map((item) => (
-            <a
-              href={item.href}
-              class="px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] dark:text-[var(--color-text-dark-secondary)] dark:hover:text-[var(--color-accent-light)] transition-colors rounded hover:bg-[var(--color-bg-alt)] dark:hover:bg-[var(--color-bg-alt-dark)]"
-            >
-              {item.text}
-            </a>
-          ))
-        }
+        <a href="/" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">首页</a>
+        <a href="/posts" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">文章</a>
+        <a href="/tags" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">标签</a>
+        <a href="/archives" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">归档</a>
+        <a href="/search" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">搜索</a>
+        <a href="/about" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-accent transition-colors rounded hover:bg-muted">关于</a>
       </nav>
-      <ThemeToggle />
-      <button id="menu-btn" class="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] dark:text-[var(--color-text-dark-secondary)] dark:hover:text-[var(--color-accent-light)]" aria-label="菜单" type="button">
+      <Socials />
+      <button id="theme-toggle" class="p-2 text-muted-foreground hover:text-accent transition-colors" aria-label="切换主题" type="button">
+        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button id="menu-btn" class="md:hidden p-2 text-muted-foreground hover:text-accent transition-colors" aria-label="菜单" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
-  <!-- Mobile nav -->
-  <div id="mobile-nav" class="mobile-nav md:hidden">
-    <div class="px-4 pb-3 pt-1 space-y-1">
-      {
-        siteConfig.nav.map((item) => (
-          <a
-            href={item.href}
-            class="block px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] dark:text-[var(--color-text-dark-secondary)] dark:hover:text-[var(--color-accent-light)] transition-colors rounded hover:bg-[var(--color-bg-alt)] dark:hover:bg-[var(--color-bg-alt-dark)]"
-          >
-            {item.text}
-          </a>
-        ))
-      }
+  <div id="mobile-nav" class="md:hidden overflow-hidden max-h-0 transition-all duration-300">
+    <div class="px-4 pb-3 pt-1 space-y-1 bg-background border-t border-border">
+      <a href="/" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">首页</a>
+      <a href="/posts" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">文章</a>
+      <a href="/tags" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">标签</a>
+      <a href="/archives" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">归档</a>
+      <a href="/search" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">搜索</a>
+      <a href="/about" class="block px-3 py-2 text-sm text-muted-foreground hover:text-accent rounded hover:bg-muted">关于</a>
     </div>
   </div>
 </header>
@@ -48,6 +43,7 @@ import ThemeToggle from "@/components/ThemeToggle.astro";
   const menuBtn = document.getElementById("menu-btn")!;
   const mobileNav = document.getElementById("mobile-nav")!;
   menuBtn.addEventListener("click", () => {
-    mobileNav.classList.toggle("open");
+    mobileNav.classList.toggle("max-h-0");
+    mobileNav.classList.toggle("max-h-80");
   });
 </script>

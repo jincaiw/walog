@@ -1,29 +1,22 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
 ---
 
-<BaseLayout title="页面未找到" noIndex>
-  <Fragment slot="header"><Header /></Fragment>
+<Layout title="页面未找到" description="找不到你要查看的页面">
+  <Header />
 
-  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-20 pb-24 text-center">
-    <h1 class="text-5xl font-bold text-[var(--color-accent)] mb-4">404</h1>
-    <p class="text-lg text-[var(--color-text-secondary)] dark:text-[var(--color-text-dark-secondary)] mb-8">
-      找不到你要查看的页面。
-    </p>
+  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-20 pb-24 text-center flex-1">
+    <h1 class="text-5xl font-bold text-accent mb-4">404</h1>
+    <p class="text-lg text-muted-foreground mb-8">找不到你要查看的页面。</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="/" class="px-5 py-2.5 bg-[var(--color-accent)] text-white rounded hover:opacity-90 transition-opacity text-sm font-medium">
-        返回首页
-      </a>
-      <a href="/blog" class="px-5 py-2.5 border border-[var(--color-border)] dark:border-[var(--color-border-dark)] rounded hover:border-[var(--color-accent)] transition-colors text-sm">
-        查看文章
-      </a>
-      <a href="/search" class="px-5 py-2.5 border border-[var(--color-border)] dark:border-[var(--color-border-dark)] rounded hover:border-[var(--color-accent)] transition-colors text-sm">
-        搜索
-      </a>
+      <LinkButton href="/" variant="primary">返回首页</LinkButton>
+      <LinkButton href="/posts">查看文章</LinkButton>
+      <LinkButton href="/search">搜索</LinkButton>
     </div>
   </div>
 
-  <Fragment slot="footer"><Footer /></Fragment>
-</BaseLayout>
+  <Footer />
+</Layout>

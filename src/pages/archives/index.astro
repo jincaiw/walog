@@ -1,0 +1,46 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import { getCollection } from "astro:content";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { slugifyStr } from "@/utils/slugify";
+
+const allPosts = await getCollection("posts");
+const sortedPosts = getSortedPosts(allPosts);
+
+const grouped: Record<number, typeof sortedPosts> = {};
+for (const post of sortedPosts) {
+  const year = post.data.pubDatetime.getFullYear();
+  if (!grouped[year]) grouped[year] = [];
+  grouped[year].push(post);
+}
+const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
+---
+
+<Layout title="归档">
+  <Header />
+
+  <Main pageTitle="归档" pageDesc="按时间归档浏览文章">
+    {years.map((year) => (
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-accent">{year}</h2>
+        <div class="space-y-2">
+          {grouped[Number(year)].map((post) => (
+            <div class="flex items-baseline gap-3">
+              <time class="text-sm text-muted-foreground shrink-0 w-16 tabular-nums">
+                {post.data.pubDatetime.toLocaleDateString("zh-CN", { month: "2-digit", day: "2-digit" })}
+              </time>
+              <a href={`/posts/${slugifyStr(post.data.title)}`} class="text-sm hover:text-accent transition-colors">
+                {post.data.title}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </Main>
+
+  <Footer />
+</Layout>

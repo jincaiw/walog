@@ -1,0 +1,45 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import config from "@/config";
+import { getCollection } from "astro:content";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const sortedPosts = getSortedPosts(allPosts);
+  const totalPages = Math.ceil(sortedPosts.length / config.posts.perPage);
+  const paths = [
+    { params: { page: undefined }, props: { page: 1 } },
+  ];
+  for (let i = 2; i <= totalPages; i++) {
+    paths.push({ params: { page: String(i) as any }, props: { page: i } });
+  }
+  return paths;
+}
+
+const { page } = Astro.props;
+const allPosts = await getCollection("posts");
+const sortedPosts = getSortedPosts(allPosts);
+const totalPages = Math.ceil(sortedPosts.length / config.posts.perPage);
+const currentPage = page;
+const start = (currentPage - 1) * config.posts.perPage;
+const pagePosts = sortedPosts.slice(start, start + config.posts.perPage);
+---
+
+<Layout title={currentPage === 1 ? "文章" : `文章 — 第 ${currentPage} 页`}>
+  <Header />
+
+  <Main pageTitle="文章" pageDesc="所有文章">
+    <ul class="space-y-1">
+      {pagePosts.map((post) => <Card post={post} />)}
+    </ul>
+    <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl="/posts" />
+  </Main>
+
+  <Footer />
+</Layout>

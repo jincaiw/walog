@@ -1,0 +1,58 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import config from "@/config";
+import { getCollection } from "astro:content";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getUniqueTags } from "@/utils/getUniqueTags";
+import { slugifyStr } from "@/utils/slugify";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const tags = getUniqueTags(allPosts);
+  const paths: { params: Record<string, string | undefined>; props: Record<string, unknown> }[] = [];
+  for (const { tag, tagSlug } of tags) {
+    const actualTagPosts = getSortedPosts(allPosts).filter((p: { data: { tags: string[] } }) =>
+      p.data.tags.some((t: string) => slugifyStr(t) === tagSlug)
+    );
+    const totalPages = Math.ceil(actualTagPosts.length / config.posts.perPage);
+    paths.push({ params: { tag: tagSlug, page: undefined }, props: { tag, tagSlug, page: 1 } });
+    for (let i = 2; i <= totalPages; i++) {
+      paths.push({ params: { tag: tagSlug, page: String(i) }, props: { tag, tagSlug, page: i } });
+    }
+  }
+  return paths;
+}
+
+interface Props {
+  tag: string;
+  tagSlug: string;
+  page: number;
+}
+
+const { tag, tagSlug, page } = Astro.props as Props;
+const allPosts = await getCollection("posts");
+const tagPosts = getSortedPosts(allPosts).filter((p) =>
+  p.data.tags.some((t: string) => slugifyStr(t) === tagSlug)
+);
+const totalPages = Math.ceil(tagPosts.length / config.posts.perPage);
+const start = (page - 1) * config.posts.perPage;
+const pagePosts = tagPosts.slice(start, start + config.posts.perPage);
+---
+
+<Layout title={`标签: ${tag}`}>
+  <Header />
+
+  <Main pageTitle={`标签: ${tag}`} pageDesc={`共 ${tagPosts.length} 篇文章`}>
+    <ul class="space-y-1">
+      {pagePosts.map((post) => <Card post={post} />)}
+    </ul>
+    <Pagination currentPage={page} totalPages={totalPages} baseUrl={`/tags/${tagSlug}`} />
+  </Main>
+
+  <Footer />
+</Layout>

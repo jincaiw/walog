@@ -1,32 +1,26 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import { siteConfig } from "@/config";
+import Main from "@/components/Main.astro";
+import config from "@/config";
 ---
 
-<BaseLayout title="关于">
-  <Fragment slot="header"><Header /></Fragment>
+<Layout title="关于">
+  <Header />
 
-  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-12 pb-16">
-    <h1 class="text-2xl font-bold mb-6">关于</h1>
-    <div class="prose">
-      <p>
-        这是 <strong>{siteConfig.shortTitle}</strong> —— {siteConfig.author} 的个人技术博客。
-      </p>
-      <p>
-        这里记录日常生活、想法、脑洞和各种思考。内容以中文为主。
-      </p>
-      <p>
-        博客使用 <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> 构建，静态部署于 GitHub Pages。
-      </p>
+  <Main pageTitle="关于">
+    <div class="prose prose-neutral dark:prose-invert max-w-[780px]">
+      <p>这是 <strong>{config.site.title}</strong>。</p>
+      <p>这里记录日常生活、想法、脑洞和各种思考。</p>
+      <p>博客使用 Astro 构建，部署于 GitHub Pages。</p>
       <h2>联系方式</h2>
       <ul>
-        <li>GitHub：<a href={siteConfig.github} target="_blank" rel="noopener noreferrer">{siteConfig.github}</a></li>
-        <li>博客 RSS：<a href={new URL("/rss.xml", Astro.site).href}>订阅更新</a></li>
+        <li>GitHub：<a href={config.site.profile ?? "https://github.com/jincaiw"} target="_blank" rel="noopener noreferrer">{config.site.profile ?? "https://github.com/jincaiw"}</a></li>
+        <li>RSS：<a href={new URL("/rss.xml", Astro.site).href}>订阅更新</a></li>
       </ul>
     </div>
-  </div>
+  </Main>
 
-  <Fragment slot="footer"><Footer /></Fragment>
-</BaseLayout>
+  <Footer />
+</Layout>

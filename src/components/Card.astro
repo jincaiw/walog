@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Datetime from "./Datetime.astro";
+import Tag from "./Tag.astro";
+import { slugifyStr } from "@/utils/slugify";
+
+export interface Props {
+  post: CollectionEntry<"posts">;
+  postPath?: string;
+}
+
+const { post } = Astro.props;
+const postSlug = slugifyStr(post.data.title);
+---
+
+<li class="my-6">
+  <article class="group">
+    <a href={`/posts/${postSlug}`} class="block no-underline space-y-2">
+      <Datetime datetime={post.data.pubDatetime} />
+      <h2 class="text-lg font-semibold group-hover:text-accent transition-colors leading-snug">
+        {post.data.title}
+      </h2>
+      <p class="text-sm text-muted-foreground leading-relaxed">
+        {post.data.description}
+      </p>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          {post.data.tags.map((tag: string) => <Tag tag={tag} />)}
+        </div>
+      )}
+    </a>
+  </article>
+</li>
