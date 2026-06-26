@@ -2,11 +2,13 @@
 
 记录日常生活、想法、脑洞、思考等。
 
+**Version**: V0.1
+
 基于 Astro 构建，静态部署于 GitHub Pages。
 
 ## 技术栈
 
-- [Astro 7](https://astro.build) — 静态站点生成器
+- [Astro 6](https://astro.build) — 静态站点生成器
 - [Tailwind CSS 4](https://tailwindcss.com) + [Typography](https://tailwindcss.com/docs/typography-plugin)
 - [Pagefind](https://pagefind.app) — 静态全文搜索
 - [GitHub Pages](https://pages.github.com) + [GitHub Actions](https://github.com/features/actions)
@@ -31,11 +33,11 @@ pnpm dev        # http://localhost:4321
 
 ### 1. 创建文章
 
-复制模板：
-
 ```bash
-cp src/content/posts/_template.md src/content/posts/my-post.md
+pnpm new-post my-post-name
 ```
+
+自动从 `_template.md` 复制并创建 `src/content/posts/my-post-name.md`。
 
 ### 2. Frontmatter 字段
 
@@ -99,6 +101,8 @@ walog/
 ├── public/
 │   ├── CNAME                      # 自定义域名
 │   └── favicon.svg
+├── scripts/
+│   └── new-post.mjs               # 新建文章脚本
 └── src/
     ├── content/
     │   ├── posts/                 # 📄 文章存放处（.md）
@@ -163,7 +167,7 @@ console.log("支持语法高亮");
 
 ### 标签规范
 
-- 标签区分大小写，建议统一全小写英文或中文
+- 标签区分大小写，建议统一中文或英文
 - 多个标签用数组 `["标签1", "标签2"]`
 - 自动去重，自动排序（按文章数量降序）
 
@@ -181,7 +185,7 @@ console.log("支持语法高亮");
 推送到 `master` 分支自动触发 GitHub Actions 部署：
 
 ```yaml
-push → actions/checkout → withastro/action → actions/deploy-pages
+push → actions/checkout → pnpm install → pnpm build → deploy-pages
 ```
 
 部署地址：
@@ -208,14 +212,14 @@ push → actions/checkout → withastro/action → actions/deploy-pages
 | `site.url` | 部署 URL | `https://mujizi.com` |
 | `posts.perPage` | 每页文章数 | `10` |
 | `posts.perIndex` | 首页显示数 | `5` |
-| `socials` | 社交链接 | GitHub、RSS |
+| `socials` | 社交链接 | GitHub |
 
 ## 🎨 深色模式
 
 - 跟随系统偏好（`prefers-color-scheme`）
 - 可手动切换（点击 Header 中的日月图标）
 - 选择持久化到 `localStorage`
-- 内联脚本防止 Flash of Unstyled Content
+- 内联脚本防止 Flash of Unstyled Content（FOUC）
 - 尊重 `prefers-reduced-motion`
 
 ## 常见问题
