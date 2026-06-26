@@ -1,33 +1,30 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
-import Tag from "./Tag.astro";
-import { slugifyStr } from "@/utils/slugify";
 
-export interface Props {
-  post: CollectionEntry<"posts">;
-  postPath?: string;
-}
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"posts">;
 
-const { post } = Astro.props;
-const postSlug = slugifyStr(post.data.title);
+const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { title, description, ...props } = data;
 ---
 
 <li class="my-6">
-  <article class="group">
-    <a href={`/posts/${postSlug}`} class="block no-underline space-y-2">
-      <Datetime datetime={post.data.pubDatetime} />
-      <h2 class="text-lg font-semibold group-hover:text-accent transition-colors leading-snug">
-        {post.data.title}
-      </h2>
-      <p class="text-sm text-muted-foreground leading-relaxed">
-        {post.data.description}
-      </p>
-      {post.data.tags && post.data.tags.length > 0 && (
-        <div class="flex flex-wrap gap-1.5 pt-1">
-          {post.data.tags.map((tag: string) => <Tag tag={tag} />)}
-        </div>
-      )}
-    </a>
-  </article>
+  <a
+    href={getPostUrl(id, filePath, Astro.currentLocale)}
+    class:list={[
+      "text-accent inline-block text-lg font-medium",
+      "decoration-dashed underline-offset-4 hover:underline",
+      "focus-visible:no-underline focus-visible:underline-offset-0",
+    ]}
+  >
+    <Heading transition:name={toTransitionName(title)}>
+      {title}
+    </Heading>
+  </a>
+  <Datetime {...props} />
+  <p>{description}</p>
 </li>

@@ -1,27 +1,33 @@
 ---
-const paths = Astro.url.pathname.split("/").filter(Boolean);
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
 ---
 
-<nav class="mx-auto max-w-[1120px] px-4 sm:px-6 pt-4" aria-label="Breadcrumb">
-  <ol class="flex items-center gap-2 text-sm text-muted-foreground">
+<nav aria-label="Breadcrumb" class="app-layout mt-8">
+  <ol class="flex flex-wrap items-center gap-2">
     <li>
-      <a href="/" class="hover:text-accent transition-colors">首页</a>
+      <a
+        href={getRelativeLocaleUrl(locale, "")}
+        class="hover:text-accent text-sm font-medium"
+      >
+        {t.nav.home}
+      </a>
     </li>
-    {paths.map((p, i) => {
-      const href = "/" + paths.slice(0, i + 1).join("/");
-      const label = p === "posts" ? "文章" : p === "tags" ? "标签" : p === "archives" ? "归档" : p === "search" ? "搜索" : p === "about" ? "关于" : decodeURIComponent(p);
-      return (
-        <>
-          <li>/</li>
-          <li>
-            {i === paths.length - 1 ? (
-              <span class="text-foreground">{label}</span>
-            ) : (
-              <a href={href} class="hover:text-accent transition-colors">{label}</a>
-            )}
-          </li>
-        </>
-      );
-    })}
+    <li aria-hidden="true" class="flex">
+      <IconChevronLeft class="size-4 rtl:-rotate-180" />
+    </li>
+    <li>
+      <a
+        href={getRelativeLocaleUrl(locale, "posts")}
+        class="hover:text-accent text-sm font-medium"
+      >
+        {t.nav.posts}
+      </a>
+    </li>
   </ol>
 </nav>

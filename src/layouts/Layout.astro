@@ -1,4 +1,8 @@
 ---
+import { ClientRouter } from "astro:transitions";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
+import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import "@/styles/global.css";
 
@@ -14,23 +18,27 @@ const { site } = config;
 const {
   title = site.title,
   description = site.description,
-  ogImage = site.ogImage ? `/${site.ogImage}` : undefined,
+  ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
 } = Astro.props;
 
-const socialImageURL = ogImage ? new URL(ogImage, Astro.site ?? Astro.url) : undefined;
+const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
+const rssHref = getRelativeLocaleUrl(
+  Astro.currentLocale ?? config.site.lang,
+  "rss.xml",
+);
 ---
 
 <!doctype html>
 <html
-  dir={site.dir}
+  dir={site.dir ?? "ltr"}
   lang={Astro.currentLocale ?? site.lang}
   class="overflow-y-scroll scroll-smooth"
 >
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -38,74 +46,58 @@ const socialImageURL = ogImage ? new URL(ogImage, Astro.site ?? Astro.url) : und
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={site.author} />
-
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={getAssetPath("sitemap-index.xml")} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.title} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    {socialImageURL && <meta property="og:image" content={socialImageURL.href} />}
+    <meta property="og:image" content={socialImageURL} />
 
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    {socialImageURL && <meta property="twitter:image" content={socialImageURL.href} />}
+    <meta property="twitter:image" content={socialImageURL} />
 
-    <link rel="alternate" type="application/rss+xml" title={site.title} href={new URL("/rss.xml", Astro.site).href} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={site.title}
+      href={new URL(rssHref, Astro.site)}
+    />
 
     <meta name="theme-color" content="" />
 
     <slot name="head" />
 
+    {site.googleVerification && (
+      <meta name="google-site-verification" content={site.googleVerification} />
+    )}
+
     <script is:inline>
       (function () {
-        var stored = localStorage.getItem("theme");
-        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        var theme = stored || (prefersDark ? "dark" : "light");
-        var root = document.documentElement;
-        root.setAttribute("data-theme", theme);
-        root.classList.toggle("dark", theme === "dark");
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const root = document.firstElementChild;
+        root?.setAttribute("data-theme", theme);
+        root?.classList.toggle("dark", theme === "dark");
         window.__theme = { value: theme };
-
-        // Wait for DOM then attach theme toggle handler
-        function initThemeToggle() {
-          var btn = document.getElementById("theme-toggle");
-          if (!btn) return;
-          var sun = document.getElementById("sun-icon");
-          var moon = document.getElementById("moon-icon");
-
-          function syncIcons(isDark) {
-            if (sun && moon) {
-              sun.classList.toggle("hidden", !isDark);
-              moon.classList.toggle("hidden", isDark);
-            }
-          }
-
-          syncIcons(theme === "dark");
-
-          btn.addEventListener("click", function () {
-            var html = document.documentElement;
-            var currDark = html.getAttribute("data-theme") === "dark";
-            var newTheme = currDark ? "light" : "dark";
-            html.setAttribute("data-theme", newTheme);
-            html.classList.toggle("dark", newTheme === "dark");
-            localStorage.setItem("theme", newTheme);
-            syncIcons(newTheme === "dark");
-          });
-        }
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", initThemeToggle);
-        } else {
-          initThemeToggle();
-        }
       })();
     </script>
+
+    <ClientRouter />
   </head>
-  <body class="bg-background text-foreground flex min-h-svh flex-col">
+  <body
+    class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
+  >
     <slot />
+    <script>
+      import "@/scripts/theme";
+    </script>
   </body>
 </html>

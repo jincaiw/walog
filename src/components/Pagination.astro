@@ -1,44 +1,54 @@
 ---
-export interface Props {
-  currentPage: number;
-  totalPages: number;
-  baseUrl: string;
-}
+import type { Page } from "astro";
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+import IconChevronLeftAlias from "@/assets/icons/IconArrowLeft.svg";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
 
-const { currentPage, totalPages, baseUrl } = Astro.props;
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+type Props = {
+  page: Page;
+};
+
+const { page: pageData } = Astro.props;
+const { currentPage, lastPage, url } = pageData;
+
+// Astro passes the full URL path in `url.prev`/`url.next`
+const prevUrl = url.prev;
+const nextUrl = url.next;
 ---
 
-{
-  totalPages > 1 && (
-    <nav class="flex items-center justify-center gap-2 mt-10" aria-label="Pagination">
-      {currentPage > 1 && (
-        <a
-          href={currentPage === 2 ? baseUrl : `${baseUrl}/${currentPage - 1}`}
-          class="px-3 py-1.5 text-sm border border-border rounded hover:border-accent transition-colors"
-        >
-          上一页
-        </a>
-      )}
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-        <a
-          href={page === 1 ? baseUrl : `${baseUrl}/${page}`}
-          class={`px-3 py-1.5 text-sm rounded transition-colors ${
-            page === currentPage
-              ? "bg-accent text-accent-foreground"
-              : "border border-border hover:border-accent"
-          }`}
-        >
-          {page}
-        </a>
-      ))}
-      {currentPage < totalPages && (
-        <a
-          href={`${baseUrl}/${currentPage + 1}`}
-          class="px-3 py-1.5 text-sm border border-border rounded hover:border-accent transition-colors"
-        >
-          下一页
-        </a>
-      )}
-    </nav>
-  )
-}
+<nav aria-label="Pagination" class="app-layout mb-12 flex items-center justify-between">
+  {prevUrl ? (
+    <a
+      href={prevUrl}
+      class="hover:text-accent hover:border-accent border-border flex items-center gap-2 rounded border px-3 py-2 text-sm font-medium"
+      aria-label={t.a11y.goToPreviousPage}
+    >
+      <IconChevronLeft class="size-4 rtl:-rotate-180" />
+      <IconChevronLeftAlias class="size-4 rtl:-rotate-180 sm:hidden" />
+      <span class="hidden sm:inline">{t.pagination.prev}</span>
+    </a>
+  ) : (
+    <span />
+  )}
+
+  <span class="text-muted-foreground text-sm">
+    {t.pagination.page} {currentPage} / {lastPage}
+  </span>
+
+  {nextUrl ? (
+    <a
+      href={nextUrl}
+      class="hover:text-accent hover:border-accent border-border flex items-center gap-2 rounded border px-3 py-2 text-sm font-medium"
+      aria-label={t.a11y.goToNextPage}
+    >
+      <span class="hidden sm:inline">{t.pagination.next}</span>
+      <IconChevronLeft class="size-4 rotate-180 rtl:rotate-0" />
+    </a>
+  ) : (
+    <span />
+  )}
+</nav>

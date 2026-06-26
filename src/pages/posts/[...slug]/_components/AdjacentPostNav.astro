@@ -1,0 +1,54 @@
+---
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+import { getPostUrl } from "@/utils/getPostPaths";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const { prevPost, nextPost } = Astro.props;
+---
+
+<nav aria-label="Adjacent posts navigation" class="flex items-center justify-between gap-4">
+  {prevPost ? (
+    <a
+      href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
+      class="hover:text-accent hover:border-accent border-border flex items-center gap-2 rounded border px-4 py-2 text-sm"
+    >
+      <IconChevronLeft class="size-4" />
+      <div class="flex flex-col">
+        <span class="text-muted-foreground text-xs">{t.post.previousPost}</span>
+        <span class="line-clamp-1">{prevPost.title}</span>
+      </div>
+    </a>
+  ) : (
+    <span />
+  )}
+
+  {nextPost ? (
+    <a
+      href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
+      class="hover:text-accent hover:border-accent border-border flex items-center gap-2 rounded border px-4 py-2 text-sm"
+    >
+      <div class="flex flex-col text-end">
+        <span class="text-muted-foreground text-xs">{t.post.nextPost}</span>
+        <span class="line-clamp-1">{nextPost.title}</span>
+      </div>
+      <IconChevronLeft class="size-4 rotate-180" />
+    </a>
+  ) : (
+    <span />
+  )}
+</nav>

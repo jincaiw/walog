@@ -1,38 +1,33 @@
+import userConfig from "@/astro-paper.config";
 import type { ResolvedAstroPaperConfig } from "./types/config";
-import rawConfig from "../astro-paper.config";
 
-function resolveConfig(): ResolvedAstroPaperConfig {
-	const c = rawConfig;
-	return {
-		site: {
-			url: c.site.url,
-			title: c.site.title,
-			description: c.site.description,
-			author: c.site.author,
-			lang: c.site.lang ?? "en",
-			timezone: c.site.timezone ?? "UTC",
-			dir: c.site.dir ?? "ltr",
-			ogImage: c.site.ogImage ?? "default-og.jpg",
-			profile: c.site.profile,
-			googleVerification: c.site.googleVerification,
-		},
-		posts: {
-			perPage: c.posts?.perPage ?? 10,
-			perIndex: c.posts?.perIndex ?? 5,
-			scheduledPostMargin: c.posts?.scheduledPostMargin ?? 15 * 60 * 1000,
-		},
-		features: {
-			lightAndDarkMode: c.features?.lightAndDarkMode ?? true,
-			dynamicOgImage: c.features?.dynamicOgImage ?? false,
-			showArchives: c.features?.showArchives ?? true,
-			showBackButton: c.features?.showBackButton ?? true,
-			editPost: c.features?.editPost ?? { enabled: false },
-			search: c.features?.search ?? "pagefind",
-		},
-		socials: c.socials ?? [],
-		shareLinks: c.shareLinks ?? [],
-	};
-}
+const DEFAULT_OG_IMAGE = "default-og.jpg";
 
-const config = resolveConfig();
+const config: ResolvedAstroPaperConfig = {
+	site: {
+		...userConfig.site,
+		ogImage: userConfig.site.ogImage ?? DEFAULT_OG_IMAGE,
+		lang: userConfig.site.lang ?? "en",
+		timezone: userConfig.site.timezone ?? "UTC",
+		dir: userConfig.site.dir ?? "ltr",
+		googleVerification: userConfig.site.googleVerification,
+	},
+	posts: {
+		perPage: userConfig.posts?.perPage ?? 4,
+		perIndex: userConfig.posts?.perIndex ?? 4,
+		scheduledPostMargin:
+			userConfig.posts?.scheduledPostMargin ?? 15 * 60 * 1000,
+	},
+	features: {
+		lightAndDarkMode: userConfig.features?.lightAndDarkMode ?? true,
+		dynamicOgImage: userConfig.features?.dynamicOgImage ?? true,
+		showArchives: userConfig.features?.showArchives ?? true,
+		showBackButton: userConfig.features?.showBackButton ?? true,
+		editPost: userConfig.features?.editPost ?? { enabled: false },
+		search: userConfig.features?.search ?? "pagefind",
+	},
+	socials: userConfig.socials ?? [],
+	shareLinks: userConfig.shareLinks ?? [],
+};
+
 export default config;

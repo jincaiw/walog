@@ -1,0 +1,45 @@
+---
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+
+const { shareLinks } = config;
+
+const icons = import.meta.glob<{
+  default: (_props: Record<string, unknown>) => unknown;
+}>("/src/assets/icons/socials/*.svg");
+
+const shareUrl = Astro.url.href;
+---
+
+<div class="flex flex-wrap items-center gap-4">
+  <span class="text-muted-foreground text-sm">{t.post.sharePostIntro}</span>
+  <div class="flex flex-wrap items-center gap-1">
+    {shareLinks.length > 0 &&
+      (await Promise.all(
+        shareLinks.map(async ({ name, url, linkTitle }) => {
+          const mod =
+            await icons[`/src/assets/icons/socials/${name}.svg`]?.();
+          const Icon = mod?.default;
+          const label =
+            linkTitle ?? t.post.sharePostOn.replace("{{platform}}", name);
+          return (
+            <a
+              href={`${url}${encodeURIComponent(shareUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-accent hover:border-accent border-border rounded border p-2"
+              title={label}
+              aria-label={label}
+            >
+              {Icon && (
+                <Icon class="size-4 fill-transparent stroke-current stroke-2" />
+              )}
+              <span class="sr-only">{label}</span>
+            </a>
+          );
+        }),
+      ))}
+  </div>
+</div>

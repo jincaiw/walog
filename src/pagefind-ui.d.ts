@@ -1,20 +1,17 @@
 declare module "@pagefind/default-ui" {
-	interface PagefindUIProps {
+	interface PagefindUIOptions {
 		element?: string | HTMLElement;
 		bundlePath?: string;
 		pageSize?: number;
 		resetStyles?: boolean;
 		showImages?: boolean;
 		showSubResults?: boolean;
-		showEmptyFilters?: boolean;
-		processTerm?: (term: string) => string;
-		processResult?: (result: any) => any;
-		debounceTimeoutMs?: number;
-		mergeIndex?: boolean;
-		highlightParam?: string;
+		excerptLength?: number;
+		baseUrl?: string;
+		autofocus?: boolean;
 	}
 	export class PagefindUI {
-		constructor(props: PagefindUIProps);
-		triggerSearch(query: string): void;
+		constructor(options: PagefindUIOptions);
 	}
+	export default PagefindUI;
 }

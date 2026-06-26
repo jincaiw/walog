@@ -1,5 +1,9 @@
-import dayjs from "dayjs";
-
-export function formatDatetime(date: Date): string {
-	return dayjs(date).format("YYYY-MM-DD");
+export function tplStr(
+	template: string,
+	vars: Record<string, string | number>,
+): string {
+	return template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => {
+		const value = vars[key];
+		return value !== undefined && value !== null ? String(value) : "";
+	});
 }

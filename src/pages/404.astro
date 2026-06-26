@@ -3,20 +3,27 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
 ---
 
-<Layout title="页面未找到" description="找不到你要查看的页面">
+<Layout title={`${t.notFound.title} | ${config.site.title}`}>
   <Header />
 
-  <div class="mx-auto max-w-[780px] px-4 sm:px-6 pt-20 pb-24 text-center flex-1">
-    <h1 class="text-5xl font-bold text-accent mb-4">404</h1>
-    <p class="text-lg text-muted-foreground mb-8">找不到你要查看的页面。</p>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <LinkButton href="/" variant="primary">返回首页</LinkButton>
-      <LinkButton href="/posts">查看文章</LinkButton>
-      <LinkButton href="/search">搜索</LinkButton>
-    </div>
-  </div>
+  <main class="app-layout flex flex-col items-center justify-center py-24">
+    <h1 class="text-accent mb-4 text-6xl font-bold">404</h1>
+    <p class="mb-8 text-xl">{t.notFound.message}</p>
+    <LinkButton
+      href={getRelativeLocaleUrl(locale, "")}
+      class="hover:text-accent hover:border-accent border-border rounded border px-4 py-2 text-sm font-medium"
+    >
+      {t.notFound.goHome}
+    </LinkButton>
+  </main>
 
   <Footer />
 </Layout>

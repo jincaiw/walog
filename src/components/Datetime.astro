@@ -1,14 +1,60 @@
 ---
-import { formatDatetime } from "@/i18n/format";
+import dayjs from "dayjs";
+import IconCalendar from "@/assets/icons/IconCalendar.svg";
+import IconEdit from "@/assets/icons/IconEdit.svg";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
 
-export interface Props {
-  datetime: Date;
+type Props = {
+  pubDatetime: Date;
+  modDatetime?: Date | null;
+  timezone?: string;
   size?: "sm" | "lg";
-}
+};
 
-const { datetime } = Astro.props;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const { pubDatetime, modDatetime, timezone, size = "sm" } = Astro.props;
+
+const timezoneStr = timezone ? config.site.timezone : undefined;
+const pubDate = dayjs(pubDatetime)
+  .tz(timezoneStr)
+  .format("YYYY-MM-DD");
+const modDate = modDatetime
+  ? dayjs(modDatetime).tz(timezoneStr).format("YYYY-MM-DD")
+  : undefined;
 ---
 
-<time datetime={datetime.toISOString()} class="text-muted-foreground text-sm">
-  {formatDatetime(datetime)}
-</time>
+<div class="flex items-center gap-2 opacity-80">
+  <IconCalendar
+    class:list={[size === "sm" ? "size-4" : "size-6"]}
+    aria-hidden="true"
+  />
+  <time
+    class:list={[
+      size === "sm" ? "text-xs" : "text-lg",
+      "italic",
+    ]}
+    datetime={pubDate}
+    title={`${t.post.publishedAt}: ${pubDate}`}
+  >
+    {pubDate}
+  </time>
+  {modDate && modDate !== pubDate && (
+    <>
+      <IconEdit
+        class:list={[size === "sm" ? "size-3" : "size-5"]}
+        aria-hidden="true"
+      />
+      <time
+        class:list={[
+          size === "sm" ? "text-xs" : "text-lg",
+          "italic",
+        ]}
+        datetime={modDate}
+        title={`${t.post.updatedAt}: ${modDate}`}
+      >
+        {modDate}
+      </time>
+    </>
+  )}
+</div>

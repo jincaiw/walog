@@ -1,14 +1,29 @@
 ---
-import config from "@/config";
+import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = {
+  noMarginTop?: boolean;
+} & HTMLAttributes<"footer">;
+
+const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const currentYear = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border mt-16">
-  <div class="mx-auto max-w-[1120px] px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-    <div>
-      <span>&copy; {new Date().getFullYear()} {config.site.author}.</span>
-      <span> 用 Astro 构建。</span>
-    </div>
+<footer
+  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  {...attrs}
+>
+  <div class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4">
     <Socials />
+    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
+      <span>{t.footer.copyright} &#169; {currentYear}</span>
+      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
+      <span>{t.footer.allRightsReserved}</span>
+    </div>
   </div>
 </footer>

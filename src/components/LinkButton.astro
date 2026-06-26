@@ -1,19 +1,29 @@
 ---
-export interface Props {
-  href: string;
-  variant?: "primary" | "secondary";
+interface Props {
+  href?: string;
+  class?: string;
+  title?: string;
+  "aria-label"?: string;
+  id?: string;
 }
 
-const { href, variant = "secondary" } = Astro.props;
+const { href, class: className, ...attrs } = Astro.props;
 ---
 
-<a
-  href={href}
-  class={`inline-flex items-center px-4 py-2 text-sm font-medium rounded transition-colors ${
-    variant === "primary"
-      ? "bg-accent text-accent-foreground hover:opacity-90"
-      : "border border-border hover:border-accent text-foreground"
-  }`}
->
-  <slot />
-</a>
+{
+  href ? (
+    <a
+      href={href.startsWith("http") ? href : href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+      class:list={["focus-outline", className]}
+      {...attrs}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button class:list={["focus-outline", className]} {...attrs}>
+      <slot />
+    </button>
+  )
+}

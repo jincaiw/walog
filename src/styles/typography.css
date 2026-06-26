@@ -4,8 +4,13 @@
   .app-prose {
     @apply prose;
 
+    /* ===== Base text colors ===== */
     h1, h2, h3, h4, th {
       @apply text-foreground mb-3;
+    }
+
+    h3 {
+      @apply italic;
     }
 
     p, strong, ol, ul, figcaption, table, code {
@@ -13,7 +18,11 @@
     }
 
     a {
-      @apply text-accent hover:text-accent/80 decoration-dashed underline-offset-4;
+      @apply text-foreground hover:text-accent wrap-break-word decoration-dashed underline-offset-4 focus-visible:no-underline;
+    }
+
+    ul {
+      @apply overflow-x-clip;
     }
 
     li {
@@ -25,7 +34,18 @@
     }
 
     img {
-      @apply border-border mx-auto border rounded;
+      @apply border-border mx-auto border;
+    }
+
+    img[role="button"] {
+      @apply cursor-zoom-in;
+      &:focus-visible {
+        @apply outline-2 outline-offset-2 outline-dashed;
+      }
+    }
+
+    figcaption {
+      @apply opacity-75;
     }
 
     table {
@@ -38,19 +58,99 @@
     }
 
     code {
-      @apply bg-muted/75 text-foreground rounded px-1.5 py-0.5 before:content-none after:content-none text-sm;
+      @apply bg-muted/75 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
     }
 
-    pre {
-      @apply border border-border rounded-lg;
-    }
-
-    pre code {
-      @apply bg-inherit p-0;
+    .astro-code code {
+      @apply flex-[1_0_100%] bg-inherit p-0;
     }
 
     blockquote {
-      @apply border-l-accent/80 opacity-80;
+      @apply border-s-accent/80 wrap-break-word opacity-80;
+    }
+
+    details:not(.callout) {
+      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
+    }
+
+    summary {
+      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-dashed;
+    }
+
+    pre {
+      @apply focus-visible:outline-accent focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-dashed;
+    }
+
+    /* ===== Chinese-specific improvements ===== */
+
+    /* Comfortable line-height for mixed CJK/Latin text */
+    p {
+      @apply leading-[1.85];
+    }
+
+    /* Adjust heading spacing for Chinese */
+    h2 {
+      @apply mt-10 mb-4 pb-2 border-b border-border;
+    }
+
+    h3 {
+      @apply mt-8 mb-3;
+    }
+
+    h4 {
+      @apply mt-6 mb-2;
+    }
+
+    /* Lists with proper CJK spacing */
+    ul, ol {
+      @apply pl-5;
+    }
+
+    li {
+      @apply mb-1;
+    }
+
+    /* Blockquote with CJK-friendly padding */
+    blockquote {
+      @apply pl-4 italic;
+    }
+
+    /* Better inline code readability */
+    code {
+      @apply text-[0.875em];
+    }
+
+    /* Table with better spacing */
+    table {
+      @apply text-sm;
+    }
+
+    th, td {
+      @apply px-3 py-2;
+    }
+  }
+
+  /* ===== Code Blocks & Syntax Highlighting ===== */
+  .astro-code {
+    @apply outline-border flex border bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
+  }
+
+  html[data-theme="dark"] .astro-code {
+    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+  }
+
+  .astro-code {
+    .line.diff.add {
+      @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];
+    }
+    .line.diff.remove {
+      @apply relative inline-block w-full bg-red-500/20 before:absolute before:-left-3 before:text-red-500 before:content-['-'];
+    }
+    .line.highlighted {
+      @apply inline-block w-full bg-slate-400/20;
+    }
+    .highlighted-word {
+      @apply border-border rounded-sm border px-0.5 py-px;
     }
   }
 }

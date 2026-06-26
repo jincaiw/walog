@@ -22,14 +22,9 @@ export default defineAstroPaperConfig({
 		dynamicOgImage: false,
 		showArchives: true,
 		showBackButton: true,
-		editPost: {
-			enabled: false,
-		},
+		editPost: { enabled: false },
 		search: "pagefind",
 	},
-	socials: [
-		{ name: "github", url: "https://github.com/jincaiw" },
-		{ name: "rss", url: "https://mujizi.com/rss.xml" },
-	],
+	socials: [{ name: "github", url: "https://github.com/jincaiw" }],
 	shareLinks: [],
 });

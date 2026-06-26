@@ -29,7 +29,7 @@ featured: true
 这个博客基于以下技术构建：
 
 - **Astro** — 静态站点生成器，天然支持 Markdown，JS 交付量极小
-- **Tailwind CSS 4** — 实用优先的 CSS 框架
+- **Tailwind CSS** — 实用优先的 CSS 框架
 - **GitHub Pages** — 零成本部署
 - **自定义域名** —  mujizi.com
 

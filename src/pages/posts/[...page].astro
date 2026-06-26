@@ -1,45 +1,42 @@
 ---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
 import Pagination from "@/components/Pagination.astro";
-import config from "@/config";
-import { getCollection } from "astro:content";
 import { getSortedPosts } from "@/utils/getSortedPosts";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
 
-export async function getStaticPaths() {
-  const allPosts = await getCollection("posts");
-  const sortedPosts = getSortedPosts(allPosts);
-  const totalPages = Math.ceil(sortedPosts.length / config.posts.perPage);
-  const paths = [
-    { params: { page: undefined }, props: { page: 1 } },
-  ];
-  for (let i = 2; i <= totalPages; i++) {
-    paths.push({ params: { page: String(i) as any }, props: { page: i } });
-  }
-  return paths;
-}
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return paginate(getSortedPosts(posts), { pageSize: config.posts.perPage });
+}) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
-const allPosts = await getCollection("posts");
-const sortedPosts = getSortedPosts(allPosts);
-const totalPages = Math.ceil(sortedPosts.length / config.posts.perPage);
-const currentPage = page;
-const start = (currentPage - 1) * config.posts.perPage;
-const pagePosts = sortedPosts.slice(start, start + config.posts.perPage);
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
 ---
 
-<Layout title={currentPage === 1 ? "文章" : `文章 — 第 ${currentPage} 页`}>
+<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
   <Header />
 
-  <Main pageTitle="文章" pageDesc="所有文章">
-    <ul class="space-y-1">
-      {pagePosts.map((post) => <Card post={post} />)}
+  <Breadcrumb />
+
+  <Main pageTitle={t.pages.postsTitle} pageDesc={t.pages.postsDesc}>
+    <ul>
+      {page.data.map((data) => (
+        <Card {...data} />
+      ))}
     </ul>
-    <Pagination currentPage={currentPage} totalPages={totalPages} baseUrl="/posts" />
   </Main>
 
-  <Footer />
+  <Pagination page={page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
 </Layout>

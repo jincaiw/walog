@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .astro/
+public/pagefind/
 *.local
 *.log
 .DS_Store
+.idea/
