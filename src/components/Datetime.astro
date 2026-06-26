@@ -1,9 +1,14 @@
 ---
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezonePlugin from "dayjs/plugin/timezone";
 import IconCalendar from "@/assets/icons/IconCalendar.svg";
 import IconEdit from "@/assets/icons/IconEdit.svg";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
+
+dayjs.extend(utc);
+dayjs.extend(timezonePlugin);
 
 type Props = {
   pubDatetime: Date;

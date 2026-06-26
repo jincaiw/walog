@@ -1,5 +1,5 @@
 ---
-title: "Astro 博客发布简要教程"
+title: "Astro 博客文章发布教程和步骤"
 description: "从新建文章到构建部署，五分钟搞定的极简发布流程。"
 pubDatetime: "2026-06-26"
 tags: ["博客", "Astro"]
@@ -15,7 +15,7 @@ featured: false
 从模板复制：
 
 ```bash
-pnpm new-post
+pnpm new-post 文章名称
 # 或手动复制
 cp src/content/posts/_template.md src/content/posts/你的文章.md
 ```

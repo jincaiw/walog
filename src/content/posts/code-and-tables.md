@@ -3,7 +3,7 @@ title: "代码块、引用与表格整理"
 description: "一篇测试各种 Markdown 元素展示效果的文章，包括多语言代码高亮、引用块、表格和列表。"
 pubDatetime: "2026-06-24"
 tags: ["Markdown", "前端"]
-featured: true
+featured: false
 ---
 
 ## 代码块

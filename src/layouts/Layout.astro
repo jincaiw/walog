@@ -99,7 +99,6 @@ const rssHref = getRelativeLocaleUrl(
     <script is:inline data-astro-rerun>
       (() => {
         const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const root = document.documentElement;
         const current = root.getAttribute("data-theme");
         if (stored && current !== stored) {

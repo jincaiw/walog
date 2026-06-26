@@ -4,7 +4,7 @@ description: "详细解析 HTTP 协议的基本原理、HTTPS 的加密机制、
 pubDatetime: "2026-06-23"
 modDatetime: "2026-06-25"
 tags: ["网络", "安全", "HTTP", "HTTPS"]
-featured: true
+featured: false
 ---
 
 ## 前言

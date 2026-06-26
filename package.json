@@ -14,7 +14,7 @@
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
-    "new-post": "cp src/content/posts/_template.md src/content/posts/"
+    "new-post": "node scripts/new-post.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.1",
