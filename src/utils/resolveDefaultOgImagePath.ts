@@ -1,5 +1,3 @@
-import config from "@/config";
-
 export function resolveDefaultOgImagePath(config: {
 	site: { ogImage: string };
 }): string {

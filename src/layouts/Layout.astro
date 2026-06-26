@@ -96,8 +96,41 @@ const rssHref = getRelativeLocaleUrl(
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
-    <script>
-      import "@/scripts/theme";
+    <script is:inline data-astro-rerun>
+      (() => {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const root = document.documentElement;
+        const current = root.getAttribute("data-theme");
+        if (stored && current !== stored) {
+          root.setAttribute("data-theme", stored);
+          root.classList.toggle("dark", stored === "dark");
+        }
+        const btn = document.getElementById("theme-btn");
+        if (btn) btn.setAttribute("aria-label", root.getAttribute("data-theme") || "light");
+      })();
+
+      // Event delegation: survives ClientRouter view transitions
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("#theme-btn");
+        if (!btn) return;
+        const root = document.documentElement;
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        root.classList.toggle("dark", next === "dark");
+        localStorage.setItem("theme", next);
+        btn.setAttribute("aria-label", next);
+      });
+
+      // Sync system preference when no manual preference saved
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+        if (!localStorage.getItem("theme")) {
+          const root = document.documentElement;
+          const next = e.matches ? "dark" : "light";
+          root.setAttribute("data-theme", next);
+          root.classList.toggle("dark", next === "dark");
+        }
+      });
     </script>
   </body>
 </html>
